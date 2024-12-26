@@ -1,22 +1,17 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { MdLibraryAdd } from "react-icons/md";
 
 function AddTodo({ onNewItems }) {
-  const [todoName, setTodoName] = useState("");
-  const [dueDate, setDueDate] = useState("");
+  const todoNameElement = useRef();
+  const todoDateElement = useRef();
 
-  const handleChangeName = (event) => {
-    setTodoName(event.target.value);
-  };
-
-  const handleDateChange = (event) => {
-    setDueDate(event.target.value);
-  };
-
-  const handleAddButtonClicked = () => {
+  const handleAddButtonClicked = (event) => {
+    event.preventDefault();
+    const todoName = todoNameElement.current.value;
+    const dueDate = todoDateElement.current.value;
+    todoNameElement.current.value = "";
+    todoDateElement.current.value = "";
     onNewItems(todoName, dueDate);
-    setTodoName("");
-    setDueDate("");
   };
 
   const today = new Date().toISOString().split("T")[0];
@@ -27,18 +22,12 @@ function AddTodo({ onNewItems }) {
         <div className="col-6">
           <input
             type="text"
+            ref={todoNameElement}
             placeholder="Enter TODO Here"
-            value={todoName}
-            onChange={handleChangeName}
           />
         </div>
         <div className="col-4">
-          <input
-            type="date"
-            value={dueDate}
-            onChange={handleDateChange}
-            min={today}
-          />
+          <input type="date" ref={todoDateElement} min={today} />
         </div>
         <div className="col-2">
           <button
